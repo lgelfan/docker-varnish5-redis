@@ -16,15 +16,17 @@ import redis;
 
 # Default backend definition. Set this to point to your content server.
 backend default {
-    .host = "10.0.1.35";
-    .port = "8999";
+    # note: udate docker hostname here or set to host IP if port is published.
+    #   (127.0.0.1 and similar will not work)
+    .host = "web";
+    .port = "80";
 }
 
 sub vcl_init {
     # VMOD configuration: simple case, keeping up to one Redis connection
     # per Varnish worker thread.
     new db = redis.db(
-        location="10.0.1.35:6379",
+        location="redis:6379",
         type=master,
         connection_timeout=500,
         shared_connections=false,
