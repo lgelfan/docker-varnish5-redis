@@ -4,7 +4,7 @@
 #
 
 FROM ubuntu:16.04
-MAINTAINER lars@float.com
+MAINTAINER tech+docker@float.com
 
 EXPOSE 6081 6082
 
