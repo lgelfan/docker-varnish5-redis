@@ -37,11 +37,17 @@ sub vcl_recv {
     # Typically you clean up the request here, removing cookies you don't need,
     # rewriting the request, etc.
 
-    # Redis Simple command execution.
+    # Redis: Simple command execution.
     db.command("SET");
     db.push("testvar");
     db.push("my val 12345");
     db.execute();
+
+    # Throttle: Varnish will set client.identity for you based on client IP.
+    if (vsthrottle.is_denied(client.identity, 10, 15s)) {
+        # Client has exceeded 10 reqs per 15s
+        return (synth(429, "Too Many Requests"));
+    }
 }
 
 sub vcl_backend_response {
@@ -58,6 +64,10 @@ sub vcl_deliver {
     # You can do accounting or modifying the final object here.
     #
 
+    # throttle report:
+    set resp.http.X-RateLimit-Remaining = vsthrottle.remaining(client.identity, 10, 15s);
+
+    # Redis GET example:
     db.command("GET");
     db.push("testvar");
     db.execute();
