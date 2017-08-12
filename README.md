@@ -54,6 +54,6 @@ I did not have great luck building on Alpine end-to-end, but may revisit.
 
 ### demo:
 To use the sample default.vcl config, set up a Docker Compose file or start the 2 services + Varnish via:
-- docker run --name=web nginx:1.12-alpine
-- docker run --name=redis -d redis:3.2-alpine
+- `docker run --name=web nginx:1.12-alpine`
+- `docker run --name=redis -d redis:3.2-alpine`
 - varnish (see above)
